@@ -60,12 +60,37 @@ char* encode(char* input, int shiftSize) {
     }
 
     return result;
-};
+}
 
-char* decode(char* input) {
+char* decode(char* input, int shiftSize) {
 
-    return input;
-};
+    char* result = (char *) malloc(sizeof(input));
+
+    for (int i = 0; input[i] != '\0'; i++) {
+
+        if (input[i] >= 'a' && input[i] <= 'z') {
+
+            result[i] = input[i] - shiftSize;
+
+            if (input[i] > 'z') {
+
+                result[i] = input[i] + 'z' + 1 - 'a';
+            }
+        }
+
+        else if (input[i] >= 'A' && input[i] <= 'X') {
+
+            result[i] = input[i] - shiftSize;
+
+            if (input[i] > 'Z') {
+
+                result[i] = input[i] + 'Z' + 1 - 'A';
+            }
+        }
+    }
+
+    return result;
+}
 
 int main(int argc, char *argv[]) {
 
@@ -120,7 +145,9 @@ int main(int argc, char *argv[]) {
 
            input = inputString(stdin, 10);
 
-           decode(input);
+           result = decode(input, shift);
+
+           printf("\nDecoded string: %s\n", result);
        }
    }
 
