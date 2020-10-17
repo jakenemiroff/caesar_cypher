@@ -1,4 +1,33 @@
 #include <stdio.h>
+#include <stdlib.h>
+
+char* inputString(FILE* fp, size_t size) {
+//The size is extended by the input with the value of the provisional
+    char* str;
+    int ch;
+    size_t len = 0;
+
+    str = (char *) malloc(sizeof(char) * size);//size is start size
+
+    if (!str) {
+        return str;
+    }
+
+    while (EOF != (ch = fgetc(fp)) && ch != '\n') {
+
+        str[len++]=ch;
+        if (len==size) {
+            str = realloc(str, sizeof(char)*(size+=16));
+
+            if (!str) {
+                return str;
+            }
+        }
+    }
+    str[len++]='\0';
+
+    return realloc(str, sizeof(char)*len);
+}
 
 char* encode(char* input) {
 
@@ -27,17 +56,21 @@ int main(int argc, char *argv[]) {
 
        char* input;
 
+       input = (char *) malloc(sizeof(char) * 100);
+
        int choice;
 
        printf("Please enter 1 to 'encode' some text, and 2 to 'decode' some text:\n\n");
 
        choice = getchar();
 
+       fflush(stdin);
+
        if (choice == 1) {
 
            printf("Please enter the message to encode:\n\n");
 
-           fgets(input);
+           input = inputString(stdin, 10);
 
            encode(input);
        }
@@ -46,13 +79,15 @@ int main(int argc, char *argv[]) {
 
            printf("Please enter the message to decode:\n\n");
 
-           fgets(input);
+           input = inputString(stdin, 10);
 
            decode(input);
        }
 
        // ask for user input here
+
+      free(input);
    }
 
-    return 0;
+   return 0;
 }
