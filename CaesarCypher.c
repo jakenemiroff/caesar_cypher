@@ -34,7 +34,7 @@ char* inputString(FILE* fp, size_t size) {
 
 char* encode(char* input, int shiftSize) {
 
-    char result[sizeof(input)];
+    char* result = (char *) malloc(sizeof(input));
 
     for (int i = 0; input[i] != '\0'; i++) {
 
@@ -48,7 +48,6 @@ char* encode(char* input, int shiftSize) {
             }
         }
 
-
         else if (input[i] >= 'A' && input[i] <= 'X') {
 
             result[i] = input[i] + shiftSize;
@@ -60,9 +59,7 @@ char* encode(char* input, int shiftSize) {
         }
     }
 
-    printf("resulting string: %s\n", result);
-
-    return input;
+    return result;
 };
 
 char* decode(char* input) {
@@ -75,25 +72,22 @@ int main(int argc, char *argv[]) {
     if (argc == 2) {
 
         // read from file here
-        printf("The argument supplied is %s\n\n", argv[1]);
+        printf("The argument supplied is %s\n", argv[1]);
    }
 
    else if (argc > 2) {
 
-       printf("Too many arguments supplied.\n\n");
+       printf("Too many arguments supplied.\n");
    }
 
    else {
 
        char* input;
-
        char choice;
-
        char shift;
+       char* result;
 
-       int shiftSize;
-
-       printf("Please enter 1 to 'encode' some text, and 2 to 'decode' some text:\n\n");
+       printf("\nPlease enter 1 to 'encode' some text, and 2 to 'decode' some text: ");
 
        choice = getchar();
 
@@ -101,7 +95,7 @@ int main(int argc, char *argv[]) {
 
        choice -= '0';
 
-       printf("Please enter shift size:\n\n");
+       printf("\nPlease enter shift size: ");
 
        shift = getchar();
 
@@ -111,16 +105,18 @@ int main(int argc, char *argv[]) {
 
        if (choice == 1) {
 
-           printf("Please enter the message to encode:\n\n");
+           printf("\nPlease enter the message to encode: ");
 
            input = inputString(stdin, 10);
 
-           encode(input, shift);
+           result = encode(input, shift);
+
+           printf("\nEncoded string: %s\n", result);
        }
 
        else {
 
-           printf("Please enter the message to decode:\n\n");
+           printf("\nPlease enter the message to decode: ");
 
            input = inputString(stdin, 10);
 
