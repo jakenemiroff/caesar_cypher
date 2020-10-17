@@ -16,7 +16,9 @@ char* inputString(FILE* fp, size_t size) {
     while (EOF != (ch = fgetc(fp)) && ch != '\n') {
 
         str[len++]=ch;
+
         if (len==size) {
+
             str = realloc(str, sizeof(char)*(size+=16));
 
             if (!str) {
@@ -24,6 +26,7 @@ char* inputString(FILE* fp, size_t size) {
             }
         }
     }
+
     str[len++]='\0';
 
     return realloc(str, sizeof(char)*len);
@@ -70,7 +73,7 @@ int main(int argc, char *argv[]) {
 
            printf("Please enter the message to encode:\n\n");
 
-           input = inputString(stdin, 10);
+           input = inputString(stdin, 100);
 
            encode(input);
        }
@@ -79,7 +82,7 @@ int main(int argc, char *argv[]) {
 
            printf("Please enter the message to decode:\n\n");
 
-           input = inputString(stdin, 10);
+           input = inputString(stdin, 100);
 
            decode(input);
        }
