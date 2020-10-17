@@ -2,12 +2,12 @@
 #include <stdlib.h>
 
 char* inputString(FILE* fp, size_t size) {
-//The size is extended by the input with the value of the provisional
+
     char* str;
     int ch;
     size_t len = 0;
 
-    str = (char *) malloc(sizeof(char) * size);//size is start size
+    str = (char *) malloc(sizeof(char) * size);
 
     if (!str) {
         return str;
@@ -15,11 +15,11 @@ char* inputString(FILE* fp, size_t size) {
 
     while (EOF != (ch = fgetc(fp)) && ch != '\n') {
 
-        str[len++]=ch;
+        str[len++] = ch;
 
-        if (len==size) {
+        if (len == size) {
 
-            str = realloc(str, sizeof(char)*(size+=16));
+            str = realloc(str, sizeof(char) * (size += 10));
 
             if (!str) {
                 return str;
@@ -27,12 +27,40 @@ char* inputString(FILE* fp, size_t size) {
         }
     }
 
-    str[len++]='\0';
+    str[len++] = '\0';
 
-    return realloc(str, sizeof(char)*len);
+    return realloc(str, sizeof(char) * len);
 }
 
-char* encode(char* input) {
+char* encode(char* input, int shiftSize) {
+
+    char result[sizeof(input)];
+
+    for (int i = 0; input[i] != '\0'; i++) {
+
+        if (input[i] >= 'a' && input[i] <= 'z') {
+
+            result[i] = input[i] + shiftSize;
+
+            if (input[i] > 'z') {
+
+                result[i] = input[i] - 'z' - 1 + 'a';
+            }
+        }
+
+
+        else if (input[i] >= 'A' && input[i] <= 'X') {
+
+            result[i] = input[i] + shiftSize;
+
+            if (input[i] > 'Z') {
+
+                result[i] = input[i] - 'Z' - 1 + 'A';
+            }
+        }
+    }
+
+    printf("resulting string: %s\n", result);
 
     return input;
 };
@@ -59,9 +87,11 @@ int main(int argc, char *argv[]) {
 
        char* input;
 
-       input = (char *) malloc(sizeof(char) * 100);
+       char choice;
 
-       int choice;
+       char shift;
+
+       int shiftSize;
 
        printf("Please enter 1 to 'encode' some text, and 2 to 'decode' some text:\n\n");
 
@@ -69,27 +99,33 @@ int main(int argc, char *argv[]) {
 
        fflush(stdin);
 
+       choice -= '0';
+
+       printf("Please enter shift size:\n\n");
+
+       shift = getchar();
+
+      fflush(stdin);
+
+       shift -= '0';
+
        if (choice == 1) {
 
            printf("Please enter the message to encode:\n\n");
 
-           input = inputString(stdin, 100);
+           input = inputString(stdin, 10);
 
-           encode(input);
+           encode(input, shift);
        }
 
        else {
 
            printf("Please enter the message to decode:\n\n");
 
-           input = inputString(stdin, 100);
+           input = inputString(stdin, 10);
 
            decode(input);
        }
-
-       // ask for user input here
-
-      free(input);
    }
 
    return 0;
